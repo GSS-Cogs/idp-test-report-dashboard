@@ -32,6 +32,6 @@ To get the data and start the server
 Navigate to `http://localhost:5050/allure-docker-service/projects/default/reports/latest/index.html`
 
 ### Housekeeping
-You'll need to kill the docker conainer once you're done
+You'll need to kill the docker container once you're done
 - do `docker ps`
 - get the id from the first column then `docker kill <that id>`
