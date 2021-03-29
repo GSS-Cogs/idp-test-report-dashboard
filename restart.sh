@@ -10,7 +10,7 @@
 # Note3: you might need "sudo docker...." depending on the box
 
 # 3600   # 1 hour in seconds
-sleep_time=120
+sleep_time=3600
 
 # 5pm, backend updates at 4pm
 target_time=17   
