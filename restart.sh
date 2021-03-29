@@ -13,7 +13,7 @@
 sleep_time=120
 
 # 5pm, backend updates at 4pm
-target_time=19    
+target_time=17   
 
 while true
 	do
