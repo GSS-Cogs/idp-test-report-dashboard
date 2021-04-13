@@ -3,6 +3,9 @@ import shutil
 
 from pathlib import Path
 from google.cloud import storage
+from zipfile import ZipFile
+
+BUCKET_NAME = os.environ["REPORT_BUCKET_NAME"]
 
 # Remove left overs from last run
 if os.path.isdir("allure-results"):
@@ -10,8 +13,6 @@ if os.path.isdir("allure-results"):
 
 if os.path.isdir("allure-report"):  
     shutil.rmtree("allure-report")
-
-BUCKET_NAME = os.environ["REPORT_BUCKET_NAME"]
 
 def get_client():
     """
@@ -33,10 +34,10 @@ p1.mkdir(0o777, exist_ok=True)
 p2 = Path("./allure-report")
 p2.mkdir(0o777, exist_ok=True)
 
-for blob in storage_client.list_blobs(BUCKET_NAME):
-    if not blob.name.endswith("/"): # don't download empty directories
-        if "/" in blob.name:
-            needs_path = "/".join(str(blob.name).split("/")[:-1])
-            this_path = Path(needs_path)
-            this_path.mkdir(0o755, exist_ok=True, parents=True)
-        blob.download_to_filename(blob.name)
+blobs = list(storage_client.list_blobs(BUCKET_NAME))
+latest_created_time = max([x.time_created for x in blobs])
+latest_data_blob = [x for x in blobs if x.time_created == latest_created_time][0]
+latest_data_blob.download_to_filename(latest_data_blob.name)
+
+with ZipFile(latest_data_blob.name, 'r') as zipObj:
+   zipObj.extractall()
